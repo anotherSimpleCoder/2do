@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Backend;
 
 [ApiController]
-[Route("api/heath")]
-public class HealthController
+[Route("api/health")]
+public class HealthController : ControllerBase
 {
     [HttpGet]
     public async Task<string> Health()
