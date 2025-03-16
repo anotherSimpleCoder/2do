@@ -32,7 +32,7 @@ jobs:
           run: |
             echo "Waiting for backend to start..."
             
-            while ! curl -sSf http://localhost:5130/health; do
+            while ! curl -sSf http://localhost:5130/api/health; do
             
                 echo "Waiting for backend to start"
             
