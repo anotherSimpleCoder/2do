@@ -1,0 +1,54 @@
+name: Integration Tests
+on:
+  push:
+    branches: [main]
+    
+jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      -   name: Checkout
+          uses: actions/checkout@v4
+          
+      -   name: Setup .NET Core for backend
+          uses: actions/setup-dotnet@v2
+          with:
+            dotnet-version: '9.x'
+
+      -   name: Install backend dependencies
+          run: dotnet restore
+
+      -   name: Build backend
+          run: dotnet build --no-restore
+
+      -   name: Start backend
+          run: dotnet run
+
+      -   name: Waiting for backend to be ready
+          
+          run: |
+            echo "Waiting for backend to start..."
+            
+            while ! curl -sSf http://localhost:5130/health; do
+            
+                echo "Waiting for backend to start"
+            
+                sleep 5
+            
+            done
+      
+      -   name: Set up Flutter
+          uses: subosito/flutter-action@v2
+          with:
+            flutter-version: '3.29.1'
+            
+      -   name: Install dependencies
+          working-directory: frontend
+          run: flutter pub get
+          
+          
+      -   name: Run tests
+          working-directory: frontend
+          run: flutter test
