@@ -24,6 +24,7 @@ jobs:
           run: dotnet build --no-restore
 
       -   name: Start backend
+          working-directory: backend
           run: dotnet run
 
       -   name: Waiting for backend to be ready
