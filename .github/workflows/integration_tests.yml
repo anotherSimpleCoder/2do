@@ -25,7 +25,7 @@ jobs:
 
       -   name: Start backend
           working-directory: Backend
-          run: dotnet run
+          run: dotnet run &
 
       -   name: Waiting for backend to be ready
           
