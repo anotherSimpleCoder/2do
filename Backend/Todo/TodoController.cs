@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Backend;
 
-public class TodoController : Controller
+[ApiController]
+[Route("api/todo")]
+public class TodoController : ControllerBase
 {
     private readonly TodoService _todoService;
 
@@ -12,20 +14,20 @@ public class TodoController : Controller
     }
 
     [HttpGet]
-    public Todo? GetTodo()
+    public async Task<Todo?> GetTodo(int todoId)
     {
-        return null;
+        return _todoService.GetTodo(todoId);
     }
     
     [HttpPost]
-    public Todo? AddTodo()
+    public async Task<Todo?> AddTodo(Todo todoToAdd)
     {
-        return null;
+        return _todoService.AddTodo(todoToAdd);
     }
 
     [HttpDelete]
-    public Todo? DeleteTodo()
+    public async Task<Todo?> DeleteTodo(int todoId)
     {
-        return null;
+        return _todoService.DeleteTodo(todoId);
     }
 }

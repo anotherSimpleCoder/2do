@@ -1,11 +1,13 @@
+using Newtonsoft.Json;
+
 namespace Backend;
 
 public class Todo : IEquatable<Todo>
 {
-    public int TodoId { get; }
-    public string Name { get; }
-    public string Description { get; }
-    public bool Done { get; }
+    public int TodoId { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public bool Done { get; set; }
     
     public Todo() {}
 
@@ -23,5 +25,10 @@ public class Todo : IEquatable<Todo>
             && Name == obj.Name
             && Description == obj.Description
             && Done == obj.Done;
+    }
+
+    public override string ToString()
+    {
+        return JsonConvert.SerializeObject(this);
     }
 }

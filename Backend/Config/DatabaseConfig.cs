@@ -7,17 +7,10 @@ using SqlKata.Execution;
 
 namespace Backend.Config;
 
-public class DatabaseConfig : IHostingStartup
+public class DatabaseConfig
 {
-    public void Configure(IWebHostBuilder builder)
-    {
-        builder.Configure(app =>
-        {
-            ConfigureDatabase(app.ApplicationServices);
-        });
-    }
 
-    private void ConfigureDatabase(IServiceProvider serviceProvider)
+    public static void ConfigureDatabase(IServiceProvider serviceProvider)
     {
         var connection = serviceProvider.GetRequiredService<DbConnection>();
         var compiler = serviceProvider.GetRequiredService<Compiler>();
@@ -25,9 +18,10 @@ public class DatabaseConfig : IHostingStartup
         connection.Open();
         
         CreateTodoTable(sql);
+        Console.WriteLine("Database configured!");
     }
     
-    private void CreateTodoTable(QueryFactory sql)
+    private static void CreateTodoTable(QueryFactory sql)
     {
         sql.Statement(@"
             create table if not exists Todos (
