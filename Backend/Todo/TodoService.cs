@@ -10,6 +10,7 @@ public class TodoService
     public TodoService(IServiceProvider serviceProvider)
     {
         _sql = new TodoContext();
+        _sql.Database.EnsureCreated();
     }
     
     public Todo? AddTodo(Todo todoToAdd)

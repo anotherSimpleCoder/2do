@@ -14,13 +14,6 @@ internal class TwoDoWebApplicationFactory : WebApplicationFactory<Program>
         builder.ConfigureServices(services =>
         {
             services.AddControllers();
-            
-            var dbConnectionString = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "test.db");
-            var dbConnection = new SqliteConnection($"Data Source={dbConnectionString}");
-            dbConnection.Open();
-
-            services.RemoveAll<DbConnection>();
-            services.AddSingleton<DbConnection>(dbConnection);
 
             services.RemoveAll<TodoService>();
             services.AddSingleton<TodoService>();
