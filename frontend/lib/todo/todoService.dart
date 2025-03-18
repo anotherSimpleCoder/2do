@@ -29,6 +29,10 @@ class TodoService {
         }
       );
 
+      if(response.statusCode != 200) {
+        throw Exception(response.body);
+      }
+
       return Todo.fromJson(jsonDecode(response.body));
     } catch(error) {
       throw Exception("Error while getting todo: ${error.toString()}");
@@ -43,6 +47,10 @@ class TodoService {
           'Content-Type': 'application/json; charset=UTF-8'
         }
       );
+
+      if(response.statusCode != 200) {
+        throw Exception(response.body);
+      }
 
       List<dynamic> todoJsonList = jsonDecode(response.body);
 
@@ -63,6 +71,10 @@ class TodoService {
           'Content-Type': 'application/json'
         }
       );
+
+      if(response.statusCode != 200) {
+        throw Exception(response.body);
+      }
       
       return Todo.fromJson(jsonDecode(response.body));
     } catch(error) {
