@@ -1,49 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/shared/formTextField.dart';
 import 'package:frontend/todo/todo.dart';
-import 'package:frontend/todo/todoBuilder.dart';
-import 'package:frontend/todo/todoService.dart';
 
 class TodoComponent extends StatefulWidget {
   const TodoComponent({
     super.key,
-    required TodoService todoService
-  }) : _todoService = todoService;
+    required this.todo
+  });
 
-  final TodoService _todoService;
+  final Todo todo;
 
   @override
   State<TodoComponent> createState() => _TodoComponentState();
 }
 
 class _TodoComponentState extends State<TodoComponent> {
-  Todo todoToAdd = TodoBuilder().build();
-  final _nameController = TextEditingController();
-  final _descriptionController = TextEditingController();
-
-  onClick() async {
-    todoToAdd.Name = _nameController.text;
-    todoToAdd.Description = _descriptionController.text;
-    await widget._todoService.postTodo(todoToAdd);
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        FormTextField(
-          label: "Todo Name",
-          controller: _nameController,
+    return Opacity(
+      opacity: widget.todo.Done ? 0.5 : 1.0,
+      child: Container(
+        margin: EdgeInsets.all(10),
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black),
+          borderRadius: BorderRadius.all(
+            Radius.circular(10)
+          )
         ),
-        FormTextField(
-          label: "Todo Description",
-          controller: _descriptionController,
-        ),
-        TextButton(
-          onPressed: () async {await onClick();}, 
-          child: Text("Post")
+        child: Column(
+          children: [
+            Text(
+              "Name: ${widget.todo.Name}",
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            Text(
+              "Description: ${widget.todo.Description}",
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+          ],
         )
-      ],
+      ),  
     );
   }
 }
