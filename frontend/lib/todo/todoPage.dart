@@ -28,22 +28,26 @@ class _TodoPageState extends State<TodoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          padding: EdgeInsets.all(10),
-          child: TodoFormComponent(todoService: widget.todoService),
-        ),
-
-        Container(
-          margin: EdgeInsets.all(10),
-          child: Center(
-              child: Column(
-                children: _todos.map((todo) => TodoComponent(todo: todo)).toList(),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.all(10),
+            child: TodoFormComponent(todoService: widget.todoService),
+          ),
+      
+          Container(
+            margin: EdgeInsets.all(10),
+            child: Center(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: _todos.map((todo) => TodoComponent(todo: todo)).toList(),
+                ),
               ),
+            )
           )
-        )
-      ],
+        ],
+      ),
     );
   }
 }

@@ -25,6 +25,7 @@ class _TodoFormComponentState extends State<TodoFormComponent> {
     todoToAdd.Name = _nameController.text;
     todoToAdd.Description = _descriptionController.text;
     await widget._todoService.postTodo(todoToAdd);
+    setState(() {});
   }
 
   @override
