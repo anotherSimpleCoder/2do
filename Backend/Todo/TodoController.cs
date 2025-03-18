@@ -18,6 +18,13 @@ public class TodoController : ControllerBase
     {
         return _todoService.GetTodo(todoId);
     }
+
+    [HttpGet]
+    [Route("all")]
+    public async Task<List<Todo>> GetAllTodos()
+    {
+        return _todoService.GetAllTodos();
+    }
     
     [HttpPost]
     public async Task<Todo?> AddTodo(Todo todoToAdd)

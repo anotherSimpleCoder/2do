@@ -23,9 +23,16 @@ void main() {
     expect(gottenTodo, equals(addedTodo));
   });
 
+  test('Post todo, get all, should be included', () async {
+    var addedTodo = await todoService.postTodo(testTodo);
+    var allTodos = await todoService.getAllTodos();
+    expect(addedTodo, isIn(allTodos));
+  });
+
   test('Post todo delete it, should be okay', () async {
     var addedTodo = await todoService.postTodo(testTodo);
     var deleteTodo = await todoService.deleteTodo(addedTodo.TodoId);
     expect(addedTodo, equals(deleteTodo));
   });
+
 }
