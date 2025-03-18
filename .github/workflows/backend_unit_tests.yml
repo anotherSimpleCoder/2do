@@ -22,6 +22,12 @@ jobs:
 
       -   name: Build
           run: dotnet build --no-restore
+          
+      -   name: Set up dotnet-ef CLI
+          run: dotnet tool install --global dotnet-ef
+          
+      -   name: Set up database
+          run: dotnet ef database update
 
       -   name: Run tests
           run: dotnet test --no-build --verbosity normal

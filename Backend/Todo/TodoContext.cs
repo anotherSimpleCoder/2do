@@ -20,7 +20,5 @@ public class TodoContext : DbContext
     {
         var dbConnectionString = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "test.db");
         optionsBuilder.UseSqlite($"Data Source={dbConnectionString}");
-        
-        Database.Migrate();
     }
 }

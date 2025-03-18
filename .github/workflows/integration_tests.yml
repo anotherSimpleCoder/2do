@@ -23,6 +23,12 @@ jobs:
       -   name: Build backend
           run: dotnet build --no-restore
 
+      -   name: Set up dotnet-ef CLI
+          run: dotnet tool install --global dotnet-ef
+
+      -   name: Set up database
+          run: dotnet ef database update
+
       -   name: Start backend
           working-directory: Backend
           run: dotnet run &
