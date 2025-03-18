@@ -1,44 +1,59 @@
-using System;
-using Microsoft.Extensions.DependencyInjection;
-using SqlKata.Execution;
+using Backend.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend;
 
 public class TodoService
 {
-    private QueryFactory _sql;
+    private TodoContext _sql;
 
     public TodoService(IServiceProvider serviceProvider)
     {
-        _sql = serviceProvider.GetService<QueryFactory>();
+        _sql = new TodoContext();
     }
     
     public Todo? AddTodo(Todo todoToAdd)
     {
-        var inserted = _sql.Query("Todos").InsertGetId<int>(new {
-            todoToAdd.Name,
-            todoToAdd.Description,
-            todoToAdd.Done
-        });
+        _sql.Todos
+            .Add(todoToAdd);
         
-        return GetTodo(inserted);
+        _sql.SaveChanges();
+
+        return todoToAdd;
     }
 
+    public List<Todo> GetAllTodos()
+    {
+        return _sql.Todos
+            .ToList();
+    }
+    
     public Todo? GetTodo(int todoId)
     {
-        return _sql.Query("Todos")
-            .Where("TodoId", todoId)
-            .First<Todo>();
+        var todo = _sql.Todos
+            .FirstOrDefault(todo => todo.TodoId == todoId);
+
+        if (todo == null)
+        {
+            throw new TodoNotFoundException();
+        }
+        
+        return todo;
     }
 
     public Todo? DeleteTodo(int todoId)
     {
         var deleted = GetTodo(todoId);
 
-        _sql.Query("Todos")
-            .Where("TodoId", todoId)
-            .AsDelete();
-        
+        _sql.Todos
+            .Where(todo => todo.TodoId == todoId)
+            .ExecuteDelete();
+
         return deleted;
+    }
+
+    public void DeleteAllTodos()
+    {
+        _sql.Todos.ExecuteDelete();
     }
 }

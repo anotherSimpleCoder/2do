@@ -1,11 +1,5 @@
 using System.Data.Common;
-using Backend.Config;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Data.Sqlite;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using SqlKata.Compilers;
-using SqlKata.Execution;
 
 namespace Backend;
 
@@ -18,23 +12,23 @@ public class Program
         dbConnection.Open();
         
         var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(
+                name: "Dev Origins",
+                policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()
+            );
+        });
         
         builder.Services.AddSingleton<DbConnection>(dbConnection);
-
-        var compiler = new SqliteCompiler();
-        builder.Services.AddSingleton<Compiler>(compiler);
-
-        builder.Services.AddSingleton(new QueryFactory(dbConnection, compiler));
         
         builder.Services.AddSingleton<TodoService>();
         builder.Services.AddControllers();
-
-        
         
         var app = builder.Build();
-        DatabaseConfig.ConfigureDatabase(app.Services);
         app.MapControllers();
-        
+        app.UseCors("Dev Origins");
         
         app.Run();
     }
