@@ -5,51 +5,68 @@ import 'package:http/http.dart' as http;
 
 class TodoService {
   Future<Todo> postTodo(Todo todoToAdd) async {
-    var response = await http.post(
-      Uri.parse("http://localhost:5130/api/todo"),
-      headers: <String, String> {
-        'Content-Type': 'application/json; charset=UTF-8'
-      },
-      body: jsonEncode(todoToAdd)
-    );
+    try {
+      var response = await http.post(
+        Uri.parse("http://localhost:5130/api/todo"),
+        headers: <String, String> {
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: jsonEncode(todoToAdd)
+      );
 
-    return Todo.fromJson(jsonDecode(response.body));
+      return Todo.fromJson(jsonDecode(response.body));
+    } catch (error) {
+      throw Exception("Error while posting todo: ${error.toString()}");
+    }
   }
 
   Future<Todo> getTodo(int todoId) async {
-    var response = await http.get(
-      Uri.parse("http://localhost:5130/api/todo?todoId=$todoId"),
-      headers: <String,String> {
-        'Content-Type': 'application/json; charset=UTF-8'
-      }
-    );
+    try {
+      var response = await http.get(
+        Uri.parse("http://localhost:5130/api/todo?todoId=$todoId"),
+        headers: <String,String> {
+          'Content-Type': 'application/json; charset=UTF-8'
+        }
+      );
 
-    return Todo.fromJson(jsonDecode(response.body));
+      return Todo.fromJson(jsonDecode(response.body));
+    } catch(error) {
+      throw Exception("Error while getting todo: ${error.toString()}");
+    }
   }
 
   Future<List<Todo>> getAllTodos() async {
-    var response = await http.get(
-      Uri.parse("http://localhost:5130/api/todo/all"),
-      headers: <String, String> {
-        'Content-Type': 'application/json; charset=UTF-8'
-      }
-    );
+    try {
+      var response = await http.get(
+        Uri.parse("http://localhost:5130/api/todo/all"),
+        headers: <String, String> {
+          'Content-Type': 'application/json; charset=UTF-8'
+        }
+      );
 
-    List<dynamic> todoJsonList = jsonDecode(response.body);
+      List<dynamic> todoJsonList = jsonDecode(response.body);
 
-    return todoJsonList
-      .map((json) => Todo.fromJson(json))
-      .toList();
-  }
+      return todoJsonList
+        .map((json) => Todo.fromJson(json))
+        .toList();
+    }
+    catch(error) {
+      throw Exception("Error while getting all todos: ${error.toString()}");
+    }
+  } 
 
   Future<Todo> deleteTodo(int todoId) async {
-    var response = await http.delete(
-      Uri.parse("http://localhost:5130/api/todo?todoId=$todoId"),
-      headers: <String, String> {
-        'Content-Type': 'application/json'
-      }
-    );
-    
-    return Todo.fromJson(jsonDecode(response.body));
+    try {
+      var response = await http.delete(
+        Uri.parse("http://localhost:5130/api/todo?todoId=$todoId"),
+        headers: <String, String> {
+          'Content-Type': 'application/json'
+        }
+      );
+      
+      return Todo.fromJson(jsonDecode(response.body));
+    } catch(error) {
+      throw Exception("Error while getting all todos: ${error.toString()}");
+    }
   }
 }
