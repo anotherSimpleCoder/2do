@@ -22,6 +22,9 @@ jobs:
 
       -   name: Build backend
           run: dotnet build --no-restore
+          
+      -   name: Set up database
+          run: dotnet ef database update
 
       -   name: Start backend
           working-directory: Backend
