@@ -7,6 +7,16 @@ public class TodoBuilder
     private string _description;
     private bool _done;
 
+    public TodoBuilder From(Todo todo)
+    {
+        _todoId = todo.TodoId;
+        _name = todo.Name;
+        _description = todo.Description;
+        _done = todo.Done;
+        
+        return this;
+    }
+    
     public TodoBuilder TodoId(int todoId)
     {
         _todoId = todoId;

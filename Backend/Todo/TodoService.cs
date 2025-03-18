@@ -53,6 +53,19 @@ public class TodoService
         return deleted;
     }
 
+    public Todo? EditTodo(Todo todoToEdit)
+    {
+        var foundTodo = _sql.Todos
+            .Find(todoToEdit.TodoId);
+        
+        foundTodo.Name = todoToEdit.Name;
+        foundTodo.Description = todoToEdit.Description;
+        foundTodo.Done = todoToEdit.Done;
+        _sql.SaveChanges();
+
+        return GetTodo(todoToEdit.TodoId);
+    }
+    
     public void DeleteAllTodos()
     {
         _sql.Todos.ExecuteDelete();

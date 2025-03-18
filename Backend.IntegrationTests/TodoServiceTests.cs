@@ -24,6 +24,7 @@ public class Tests
         _testTodo = new TodoBuilder()
             .Name("Test Todo")
             .Description("This is a test")
+            .Done(false)
             .Build();
     }
 
@@ -69,7 +70,7 @@ public class Tests
     }
 
     [Test]
-    public void AddTodoDFeleteItAndGetIt_ShouldThrowNotFound()
+    public void AddTodoDeleteItAndGetIt_ShouldThrowNotFound()
     {
         var addedTodo = _todoService.AddTodo(_testTodo);
         Assert.That(addedTodo, Is.Not.Null);
@@ -91,5 +92,22 @@ public class Tests
 
         var allTodos = _todoService.GetAllTodos();
         Assert.That(allTodos.Contains(addedTodo), Is.False);
+    }
+
+    [Test]
+    public void AddTodoAndEditIt_ShouldBeOkay()
+    {
+        var addedTodo = _todoService.AddTodo(_testTodo);
+        Assert.That(addedTodo, Is.Not.Null);
+
+        var edit = new TodoBuilder()
+            .From(addedTodo)
+            .Done(true)
+            .Build();
+
+        var editedTodo = _todoService.EditTodo(edit);
+        
+        Assert.That(editedTodo, Is.Not.Null);
+        Assert.That(addedTodo.Done, Is.True);
     }
 }
