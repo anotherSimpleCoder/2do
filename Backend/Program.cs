@@ -7,10 +7,6 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        var dbConnectionString = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "test.db");
-        var dbConnection = new SqliteConnection($"Data Source={dbConnectionString}");
-        dbConnection.Open();
-        
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddCors(options =>
@@ -20,8 +16,6 @@ public class Program
                 policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()
             );
         });
-        
-        builder.Services.AddSingleton<DbConnection>(dbConnection);
         
         builder.Services.AddSingleton<TodoService>();
         builder.Services.AddControllers();
