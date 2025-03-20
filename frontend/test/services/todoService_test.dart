@@ -5,12 +5,16 @@ import 'package:frontend/todo/todoService.dart';
 import 'package:test/test.dart';
 
 void main() {
-  var testTodo = new TodoBuilder()
+  var testTodo = TodoBuilder()
     .name("Test to do")
     .description("This is a test todo")
     .build();
 
-  var todoService = new TodoService();
+  var todoService = TodoService();
+
+  setUp(() async {
+    await todoService.deleteAllTodos();
+  });
 
   test('Post todo, should be okay', () async {  
     var addedTodo = await todoService.postTodo(testTodo);

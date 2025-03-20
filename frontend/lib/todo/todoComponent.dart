@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/todo/todo.dart';
 import 'package:frontend/todo/todoBuilder.dart';
+import 'package:frontend/todo/todoService.dart';
 
 class TodoComponent extends StatefulWidget {
   const TodoComponent({
     super.key,
-    required this.todo
-  });
+    required this.todo,
+    required TodoService todoService
+  }) : _todoService = todoService;
 
+  final TodoService _todoService;
   final Todo todo;
 
   @override
@@ -21,6 +24,11 @@ class _TodoComponentState extends State<TodoComponent> {
   void initState() {
     setState(() => todo = widget.todo);
     super.initState();
+  }
+
+  void onDeleteClick() {
+    widget._todoService.deleteTodo(todo.TodoId)
+      .then((value) => setState(() {}));
   }
 
   @override
@@ -55,6 +63,10 @@ class _TodoComponentState extends State<TodoComponent> {
                 TextButton(
                   onPressed: (){setState(() => todo.Done = true);}, 
                   child: Text("Done")
+                ),
+                TextButton(
+                  onPressed: () => onDeleteClick(),
+                  child: Text('Delete')
                 )
               ],
             )

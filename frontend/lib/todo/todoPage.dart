@@ -19,15 +19,9 @@ class _TodoPageState extends State<TodoPage> {
   List<Todo> _todos = [];
 
   @override
-  void initState() {
-    super.initState();
-
+  Widget build(BuildContext context) {
     widget.todoService.getAllTodos()
       .then((todoList) => setState(() => _todos = todoList));
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -41,7 +35,13 @@ class _TodoPageState extends State<TodoPage> {
             child: Center(
               child: SingleChildScrollView(
                 child: Column(
-                  children: _todos.map((todo) => TodoComponent(todo: todo)).toList(),
+                  children: _todos.map((todo){
+                    return TodoComponent(
+                      todo: todo,
+                      todoService: widget.todoService,
+                    );
+                  })
+                  .toList(),
                 ),
               ),
             )

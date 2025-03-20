@@ -81,4 +81,19 @@ class TodoService {
       throw Exception("Error while getting all todos: ${error.toString()}");
     }
   }
+
+  Future<void> deleteAllTodos() async {
+    var response = await http.delete(
+      Uri.parse("http://localhost:5130/api/todo/all"),
+      headers: <String, String>  {
+        'Content-Type': 'application/json'
+      }
+    );
+
+    if(response.statusCode != 200) {
+      throw Exception(response.body);
+    }
+
+    return;
+  }
 }
