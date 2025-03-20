@@ -2,10 +2,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend;
 
-public class TodoContext : DbContext
+public sealed class TodoContext : DbContext
 {
+    public TodoContext(DbContextOptions<TodoContext> options) : base(options) {}
+    
     public DbSet<Todo> Todos { get; set; }
-
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Todo>()
@@ -14,11 +16,5 @@ public class TodoContext : DbContext
         modelBuilder.Entity<Todo>()
             .Property(todo => todo.TodoId)
             .ValueGeneratedOnAdd();
-    }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        var dbConnectionString = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "test.db");
-        optionsBuilder.UseSqlite($"Data Source={dbConnectionString}");
     }
 }

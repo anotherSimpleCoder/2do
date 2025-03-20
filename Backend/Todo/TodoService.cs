@@ -9,30 +9,36 @@ public class TodoService
 
     public TodoService(IServiceProvider serviceProvider)
     {
-        _sql = new TodoContext();
+        var scope = serviceProvider.CreateScope();
+        _sql = scope.ServiceProvider.GetRequiredService<TodoContext>();
+        if (_sql == null)
+        {
+            throw new Exception("TodoContext not found!");
+        }
+        
         _sql.Database.EnsureCreated();
     }
     
-    public Todo? AddTodo(Todo todoToAdd)
+    public async Task<Todo> AddTodo(Todo todoToAdd)
     {
-        _sql.Todos
-            .Add(todoToAdd);
+        await _sql.Todos
+            .AddAsync(todoToAdd);
         
-        _sql.SaveChanges();
+        await _sql.SaveChangesAsync();
 
         return todoToAdd;
     }
 
-    public List<Todo> GetAllTodos()
+    public async Task<List<Todo>> GetAllTodos()
     {
-        return _sql.Todos
-            .ToList();
+        return await _sql.Todos
+            .ToListAsync();
     }
     
-    public Todo? GetTodo(int todoId)
+    public async Task<Todo> GetTodo(int todoId)
     {
-        var todo = _sql.Todos
-            .FirstOrDefault(todo => todo.TodoId == todoId);
+        var todo = await _sql.Todos
+            .FirstOrDefaultAsync(todo => todo.TodoId == todoId);
 
         if (todo == null)
         {
@@ -42,32 +48,32 @@ public class TodoService
         return todo;
     }
 
-    public Todo? DeleteTodo(int todoId)
+    public async Task<Todo> DeleteTodo(int todoId)
     {
-        var deleted = GetTodo(todoId);
+        var deleted = await GetTodo(todoId);
 
-        _sql.Todos
+        await _sql.Todos
             .Where(todo => todo.TodoId == todoId)
-            .ExecuteDelete();
+            .ExecuteDeleteAsync();
 
         return deleted;
     }
 
-    public Todo? EditTodo(Todo todoToEdit)
+    public async Task<Todo> EditTodo(Todo todoToEdit)
     {
-        var foundTodo = _sql.Todos
-            .Find(todoToEdit.TodoId);
+        var foundTodo = await _sql.Todos
+            .FindAsync(todoToEdit.TodoId);
         
         foundTodo.Name = todoToEdit.Name;
         foundTodo.Description = todoToEdit.Description;
         foundTodo.Done = todoToEdit.Done;
-        _sql.SaveChanges();
+        await _sql.SaveChangesAsync();
 
-        return GetTodo(todoToEdit.TodoId);
+        return await GetTodo(todoToEdit.TodoId);
     }
     
-    public void DeleteAllTodos()
+    public async Task DeleteAllTodos()
     {
-        _sql.Todos.ExecuteDelete();
+       await _sql.Todos.ExecuteDeleteAsync();
     }
 }

@@ -16,25 +16,33 @@ public class TodoController : ControllerBase
     [HttpGet]
     public async Task<Todo?> GetTodo(int todoId)
     {
-        return _todoService.GetTodo(todoId);
+        return await _todoService.GetTodo(todoId);
     }
 
     [HttpGet]
     [Route("all")]
     public async Task<List<Todo>> GetAllTodos()
     {
-        return _todoService.GetAllTodos();
+        return await _todoService.GetAllTodos();
     }
     
     [HttpPost]
     public async Task<Todo?> AddTodo(Todo todoToAdd)
     {
-        return _todoService.AddTodo(todoToAdd);
+        return await _todoService.AddTodo(todoToAdd);
     }
 
     [HttpDelete]
     public async Task<Todo?> DeleteTodo(int todoId)
     {
-        return _todoService.DeleteTodo(todoId);
+        return await _todoService.DeleteTodo(todoId);
+    }
+
+    
+    [HttpDelete]
+    [Route("all")]
+    public async Task DeleteAllTodos()
+    {
+        await _todoService.DeleteAllTodos();
     }
 }

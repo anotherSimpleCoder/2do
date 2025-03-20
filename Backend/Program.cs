@@ -1,5 +1,6 @@
 using System.Data.Common;
 using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend;
 
@@ -16,7 +17,9 @@ public class Program
                 policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()
             );
         });
-        
+
+        var dbConnectionString = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "test.db");
+        builder.Services.AddDbContext<TodoContext>(options => options.UseSqlite($"Data Source={dbConnectionString}"), ServiceLifetime.Scoped);
         builder.Services.AddSingleton<TodoService>();
         builder.Services.AddControllers();
         

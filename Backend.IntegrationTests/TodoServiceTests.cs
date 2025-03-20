@@ -36,68 +36,68 @@ public class Tests
     }
 
     [Test]
-    public void AddTodoAndGetIt_ShouldBeEqual()
+    public async Task AddTodoAndGetIt_ShouldBeEqual()
     {
-        var addedTodo = _todoService.AddTodo(_testTodo);
+        var addedTodo = await _todoService.AddTodo(_testTodo);
         Assert.That(addedTodo, Is.Not.Null);
 
-        var gottenTodo = _todoService.GetTodo(addedTodo.TodoId);
+        var gottenTodo = await _todoService.GetTodo(addedTodo.TodoId);
         Assert.That(gottenTodo, Is.Not.Null);
         
         Assert.That(addedTodo, Is.EqualTo(gottenTodo));
     }
 
     [Test]
-    public void AddTodoAndGetAllTodos_ShouldBeIncluded()
+    public async Task AddTodoAndGetAllTodos_ShouldBeIncluded()
     {
-        var addedTodo = _todoService.AddTodo(_testTodo);
+        var addedTodo = await _todoService.AddTodo(_testTodo);
         Assert.That(addedTodo, Is.Not.Null);
 
-        var allTodos = _todoService.GetAllTodos();
+        var allTodos = await _todoService.GetAllTodos();
         Assert.That(allTodos.Contains(addedTodo), Is.True);
     }
 
     [Test]
-    public void AddTodoAndDeleteIt_ShouldBeOk()
+    public async Task AddTodoAndDeleteIt_ShouldBeOk()
     {
-        var addedTodo = _todoService.AddTodo(_testTodo);
+        var addedTodo = await _todoService.AddTodo(_testTodo);
         Assert.That(addedTodo, Is.Not.Null);
 
-        var deletedTodo = _todoService.DeleteTodo(addedTodo.TodoId);
+        var deletedTodo = await _todoService.DeleteTodo(addedTodo.TodoId);
         Assert.That(deletedTodo, Is.Not.Null);
         
         Assert.That(deletedTodo, Is.EqualTo(addedTodo));
     }
 
     [Test]
-    public void AddTodoDeleteItAndGetIt_ShouldThrowNotFound()
+    public async Task AddTodoDeleteItAndGetIt_ShouldThrowNotFound()
     {
-        var addedTodo = _todoService.AddTodo(_testTodo);
+        var addedTodo = await _todoService.AddTodo(_testTodo);
         Assert.That(addedTodo, Is.Not.Null);
 
-        var deletedTodo = _todoService.DeleteTodo(addedTodo.TodoId);
+        var deletedTodo = await _todoService.DeleteTodo(addedTodo.TodoId);
         Assert.That(deletedTodo, Is.Not.Null);
         
-        Assert.Throws<TodoNotFoundException>(() => _todoService.GetTodo(addedTodo.TodoId));
+        Assert.ThrowsAsync<TodoNotFoundException>(async () => await _todoService.GetTodo(addedTodo.TodoId));
     }
     
     [Test]
-    public void AddTodoAndDeleteItAndGetAll_ShouldNotBeIncluded()
+    public async Task AddTodoAndDeleteItAndGetAll_ShouldNotBeIncluded()
     {
-        var addedTodo = _todoService.AddTodo(_testTodo);
+        var addedTodo = await _todoService.AddTodo(_testTodo);
         Assert.That(addedTodo, Is.Not.Null);
 
-        var deletedTodo = _todoService.DeleteTodo(addedTodo.TodoId);
+        var deletedTodo = await _todoService.DeleteTodo(addedTodo.TodoId);
         Assert.That(deletedTodo, Is.EqualTo(addedTodo));
 
-        var allTodos = _todoService.GetAllTodos();
+        var allTodos = await _todoService.GetAllTodos();
         Assert.That(allTodos.Contains(addedTodo), Is.False);
     }
 
     [Test]
-    public void AddTodoAndEditIt_ShouldBeOkay()
+    public async Task AddTodoAndEditIt_ShouldBeOkay()
     {
-        var addedTodo = _todoService.AddTodo(_testTodo);
+        var addedTodo = await _todoService.AddTodo(_testTodo);
         Assert.That(addedTodo, Is.Not.Null);
 
         var edit = new TodoBuilder()
@@ -105,7 +105,7 @@ public class Tests
             .Done(true)
             .Build();
 
-        var editedTodo = _todoService.EditTodo(edit);
+        var editedTodo = await _todoService.EditTodo(edit);
         
         Assert.That(editedTodo, Is.Not.Null);
         Assert.That(addedTodo.Done, Is.True);
