@@ -25,7 +25,9 @@ pipeline {
 
                 sh 'dotnet restore'
                 sh 'dotnet build --no-restore'
+
                 sh 'dotnet tool install --global dotnet-ef'
+                sh 'export PATH="$PATH:/root/.dotnet/tools"'
 
                 dir('Backend') { sh 'dotnet ef database update' }
 
