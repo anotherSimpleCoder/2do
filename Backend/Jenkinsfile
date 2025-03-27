@@ -1,0 +1,44 @@
+void setBuildStatus(String message, String state) {
+  step([
+      $class: "GitHubCommitStatusSetter",
+      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/anotherSimpleCoder/2do"],
+      contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "Test and Build Backend"],
+      errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+      statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
+  ]);
+}
+
+pipeline {
+    agent none
+
+    stages {
+        stage('Test') {
+            agent  {
+                docker {
+                    image 'mcr.microsoft.com/dotnet/sdk:9.0'
+                    args '-u root' 
+                }
+            }
+
+            steps {
+                setBuildStatus("Testing", "PENDING")
+
+                sh 'dotnet restore'
+                sh 'dotnet build --no-restore'
+                sh 'dotnet tool install --global dotnet-ef'
+
+                dir('Backend') { sh 'dotnet ef database update' }
+
+                sh 'dotnet test --no-build --verbosity normal'
+            }
+        }
+
+        stage('Set GitHub status') {
+            agent any
+
+            steps {
+                setBuildStatus("Test complete", "SUCCESS");
+            }
+        }
+    }
+}
