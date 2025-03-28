@@ -72,14 +72,14 @@ pipeline {
         stage('Install dependencies for frontend') {
             steps {
                 dir('frontend') {
-                    sh "'${pwd()}/flutter/bin/flutter pub get'"
+                    sh "'${pwd()}/flutter/bin/flutter' pub get"
                 }
             }
         }
         stage('Run integration tests') {
             steps {
                 dir('frontend') {
-                    sh "'${pwd()}/flutter/bin/flutter test'"
+                    sh "'${pwd()}/flutter/bin/flutter' test"
                 }
             }
         }
