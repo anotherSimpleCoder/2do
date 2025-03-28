@@ -28,6 +28,8 @@ pipeline {
 
                 sh 'dotnet tool install --global dotnet-ef'
 
+                sh 'export PATH="$PATH:/root/.dotnet/tools"'
+                sh 'source ~/.bash_profile'
                 dir('Backend') { sh 'dotnet ef database update' }
 
                 sh 'dotnet test --no-build --verbosity normal'
