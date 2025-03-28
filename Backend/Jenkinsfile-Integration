@@ -9,60 +9,44 @@ void setBuildStatus(String message, String state) {
 }
 
 pipeline {
-    agent none
+    agent any
 
     stages {
         stage('Build and Start Backend') {
-            agent  {
-                docker {
-                    image 'mcr.microsoft.com/dotnet/sdk:9.0'
-                    args '-u root -p 5130:5130' 
-                }
-            }
-
-            steps {
+            script {
                 setBuildStatus("${STAGE_NAME}", "PENDING")
 
-                sh 'dotnet restore'
-                sh 'dotnet build --no-restore'
+                docker.image('mcr.microsoft.com/dotnet/sdk:9.0').withRun('-u root -p 5130:5130' ) {c -> 
+                    sh 'dotnet restore'
+                    sh 'dotnet build --no-restore'
 
-                sh 'dotnet tool install dotnet-ef'
+                    sh 'dotnet tool install dotnet-ef'
 
-                dir('Backend') { 
-                    sh 'dotnet tool run dotnet-ef database update' 
-                    sh 'dotnet run &'
+                    dir('Backend') { 
+                        sh 'dotnet tool run dotnet-ef database update' 
+                        sh 'dotnet run &'
+                    }
+
+                    waitUntil {
+                        script {
+                            def result = sh(script: 'curl -sSf http://localhost:5130/api/health', returnStatus: true)
+                            return result == 0
+                        }
+                    }
                 }
 
-                waitUntil {
-                    script {
-                        def result = sh(script: 'curl -sSf http://localhost:5130/api/health', returnStatus: true)
-                        return result == 0
+                docker.image('instrumentisto/flutter:latest').withRun('-u root --network host') {c ->
+                    setBuildStatus("${STAGE_NAME}", "PENDING")
+
+                    dir('frontend') {
+                        sh 'flutter pub get'
+                        sh 'flutter test'
                     }
                 }
             }
         }
 
-        stage('Run integration tests on Flutter') {
-            agent {
-                docker {
-                    image 'instrumentisto/flutter:latest'
-                    args '-u root --network host' 
-                }
-            }
-
-            steps {
-                setBuildStatus("${STAGE_NAME}", "PENDING")
-
-                dir('frontend') {
-                    sh 'flutter pub get'
-                    sh 'flutter test'
-                }
-            }
-        }
-
         stage('Set GitHub status') {
-            agent any
-
             steps {
                 setBuildStatus("Test complete", "SUCCESS");
             }
