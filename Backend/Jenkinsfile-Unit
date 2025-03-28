@@ -12,6 +12,14 @@ pipeline {
     agent none
 
     stages {
+        stage('Set GitHub status') {
+            agent any
+
+            steps {
+                setBuildStatus("Starting Integration tests", "PENDING");
+            }
+        }
+
         stage('Unit Testing Backend') {
             agent  {
                 docker {

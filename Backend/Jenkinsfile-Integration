@@ -17,6 +17,13 @@ pipeline {
     }
 
     stages {
+        stage('Set GitHub status') {
+            agent any
+
+            steps {
+                setBuildStatus("Starting Integration tests", "PENDING");
+            }
+        }
         stage('Setup .NET Core for backend') {
             steps {
                 script {
