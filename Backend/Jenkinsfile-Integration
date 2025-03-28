@@ -13,34 +13,36 @@ pipeline {
 
     stages {
         stage('Build and Start Backend') {
-            script {
-                setBuildStatus("${STAGE_NAME}", "PENDING")
-
-                docker.image('mcr.microsoft.com/dotnet/sdk:9.0').withRun('-u root -p 5130:5130' ) {c -> 
-                    sh 'dotnet restore'
-                    sh 'dotnet build --no-restore'
-
-                    sh 'dotnet tool install dotnet-ef'
-
-                    dir('Backend') { 
-                        sh 'dotnet tool run dotnet-ef database update' 
-                        sh 'dotnet run &'
-                    }
-
-                    waitUntil {
-                        script {
-                            def result = sh(script: 'curl -sSf http://localhost:5130/api/health', returnStatus: true)
-                            return result == 0
-                        }
-                    }
-                }
-
-                docker.image('instrumentisto/flutter:latest').withRun('-u root --network host') {c ->
+            steps {
+                script {
                     setBuildStatus("${STAGE_NAME}", "PENDING")
 
-                    dir('frontend') {
-                        sh 'flutter pub get'
-                        sh 'flutter test'
+                    docker.image('mcr.microsoft.com/dotnet/sdk:9.0').withRun('-u root -p 5130:5130' ) {c -> 
+                        sh 'dotnet restore'
+                        sh 'dotnet build --no-restore'
+
+                        sh 'dotnet tool install dotnet-ef'
+
+                        dir('Backend') { 
+                            sh 'dotnet tool run dotnet-ef database update' 
+                            sh 'dotnet run &'
+                        }
+
+                        waitUntil {
+                            script {
+                                def result = sh(script: 'curl -sSf http://localhost:5130/api/health', returnStatus: true)
+                                return result == 0
+                            }
+                        }
+                    }
+
+                    docker.image('instrumentisto/flutter:latest').withRun('-u root --network host') {c ->
+                        setBuildStatus("${STAGE_NAME}", "PENDING")
+
+                        dir('frontend') {
+                            sh 'flutter pub get'
+                            sh 'flutter test'
+                        }
                     }
                 }
             }
