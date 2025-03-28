@@ -53,8 +53,10 @@ pipeline {
             steps {
                 setBuildStatus("${STAGE_NAME}", "PENDING")
 
-                sh 'flutter pub get'
-                sh 'flutter test'
+                dir('frontend') {
+                    sh 'flutter pub get'
+                    sh 'flutter test'
+                }
             }
         }
 
