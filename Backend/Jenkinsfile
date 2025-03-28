@@ -28,12 +28,7 @@ pipeline {
 
                 sh 'dotnet tool install --global dotnet-ef'
 
-                script {
-                    withEnv(['PATH+EXTRA=/root/.dotnet/tools']) {
-                        dir('Backend') { sh 'dotnet ef database update' }
-                        
-                    }
-                }
+                dir('Backend') { sh 'dotnet ef database update' }
 
                 sh 'dotnet test --no-build --verbosity normal'
             }
