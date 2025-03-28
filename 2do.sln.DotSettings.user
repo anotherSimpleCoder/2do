@@ -5,11 +5,11 @@
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AMatchesControllerTests_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003FAppData_003FLocal_003FTemp_003F5e77ebad_002Ddae4_002D4950_002Db772_002D92bce2981452_005Fdo_002Dnot_002Dunit_002Dtest_002Dapi_002Ezip_002E452_003FMatchMaker_002EApi_002EIntegrationTests_003FMatchesControllerTests_002Ecs_002Fz_003A2_002D1/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AQueryExtensions_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003FAppData_003FRoaming_003FJetBrains_003FRider2024_002E3_003Fresharper_002Dhost_003FDecompilerCache_003Fdecompiler_003F6ce170c53c9c48d487326dadef65044f13400_003Fb7_003F8c007768_003FQueryExtensions_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003ATestAuthHandler_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003FAppData_003FLocal_003FTemp_003Fba093548_002Deb11_002D4031_002D91f5_002D07109a4c3574_005Fdo_002Dnot_002Dunit_002Dtest_002Dapi_002Ezip_002E574_003FMatchMaker_002EApi_002EIntegrationTests_003FTestAuthHandler_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=de28837c_002Df16b_002D4dfe_002D8957_002D9a09a182ac31/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Tests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;NUnit3x::1AC1E27F-6CBF-4BDA-83D8-041EF2E8F15D::net9.0::Backend.UnitTests.Tests&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;NUnit3x::1AC1E27F-6CBF-4BDA-83D8-041EF2E8F15D::net9.0::Backend.UnitTests.TodoBuilderTests.BuildTodoWithCustomName_ShouldBeEqual&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;NUnit3x::1AC1E27F-6CBF-4BDA-83D8-041EF2E8F15D::net9.0::Backend.UnitTests.TodoBuilderTests&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;NUnit3x::B9789D38-57BC-410D-AF51-A7B104AC8334::net9.0::Backend.IntegrationTests.Tests&lt;/TestId&gt;&#xD;
-  &lt;/TestAncestor&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=de28837c_002Df16b_002D4dfe_002D8957_002D9a09a182ac31/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Tests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;NUnit3x::1AC1E27F-6CBF-4BDA-83D8-041EF2E8F15D::net9.0::Backend.UnitTests.Tests&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::1AC1E27F-6CBF-4BDA-83D8-041EF2E8F15D::net9.0::Backend.UnitTests.TodoBuilderTests.BuildTodoWithCustomName_ShouldBeEqual&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::1AC1E27F-6CBF-4BDA-83D8-041EF2E8F15D::net9.0::Backend.UnitTests.TodoBuilderTests&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::B9789D38-57BC-410D-AF51-A7B104AC8334::net9.0::Backend.IntegrationTests.Tests&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
