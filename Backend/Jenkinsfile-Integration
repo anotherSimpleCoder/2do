@@ -46,7 +46,7 @@ pipeline {
             agent {
                 docker {
                     image 'instrumentisto/flutter:latest'
-                    args '-u root' 
+                    args '-u root --network host' 
                 }
             }
 
