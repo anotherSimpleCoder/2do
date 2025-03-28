@@ -66,25 +66,17 @@ pipeline {
                 }
             }
         }
-        stage('Set up Flutter') {
-            steps {
-                script {
-                    sh 'git clone https://github.com/flutter/flutter.git flutter-2'
-                    sh 'export PATH=$PATH:$PWD/flutter-2/bin'
-                }
-            }
-        }
         stage('Install dependencies for frontend') {
             steps {
                 dir('frontend') {
-                    sh '$PWD/flutter-2/bin/flutter pub get'
+                    sh '$PWD/flutter/bin/flutter pub get'
                 }
             }
         }
         stage('Run tests') {
             steps {
                 dir('frontend') {
-                    sh '$PWD/flutter-2/bin/flutter test'
+                    sh '$PWD/flutter/bin/flutter test'
                 }
             }
         }
