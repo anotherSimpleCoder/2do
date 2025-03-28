@@ -17,7 +17,7 @@ pipeline {
     }
 
     stages {
-        stage('Set GitHub status') {
+        stage('Set GitHub pending status') {
             agent any
 
             steps {
@@ -101,7 +101,7 @@ pipeline {
                 }
             }
         }
-        stage('Set GitHub status') {
+        stage('Set GitHub success status') {
             agent any
 
             steps {
