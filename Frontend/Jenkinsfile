@@ -20,7 +20,7 @@ pipeline {
             }
         }
         
-        stage('Build docker backend image') {
+        stage('Build docker web-frontend image') {
             steps {
                 setBuildStatus("Building", "PENDING");
                     
