@@ -67,16 +67,20 @@ pipeline {
             }
         }
         stage('Install dependencies for frontend') {
+            environment {
+                PATH = "${env.PATH}:$PWD/flutter-2/bin"
+            }
+
             steps {
                 dir('frontend') {
-                    sh '$PWD/flutter/bin/flutter pub get'
+                    sh 'flutter pub get'
                 }
             }
         }
         stage('Run tests') {
             steps {
                 dir('frontend') {
-                    sh '$PWD/flutter/bin/flutter test'
+                    sh 'flutter test'
                 }
             }
         }
