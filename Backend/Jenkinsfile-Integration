@@ -40,13 +40,13 @@ pipeline {
         }
         stage('Set up dotnet-ef CLI') {
             steps {
-                sh 'dotnet tool install --global dotnet-ef'
+                sh 'dotnet tool install dotnet-ef'
             }
         }
         stage('Set up database') {
             steps {
                 dir('Backend') {
-                    sh 'dotnet ef database update'
+                    sh 'dotnet tool run dotnet-ef database update' 
                 }
             }
         }
