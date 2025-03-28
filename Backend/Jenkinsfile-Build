@@ -1,0 +1,44 @@
+void setBuildStatus(String message, String state) {
+  step([
+      $class: "GitHubCommitStatusSetter",
+      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/anotherSimpleCoder/2do"],
+      contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "Build backend"],
+      errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+      statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
+  ]);
+}
+
+pipeline {
+    stage('Set GitHub pending status') {
+        agent any
+
+        steps {
+            setBuildStatus("Starting building backend", "PENDING");
+        }
+    }
+    
+    stage('Build docker backend image') {
+        agent any
+    
+        steps {
+            setBuildStatus("Building", "PENDING");
+                
+            dir('Backend') {
+              script {
+                docker.withRegistry('https://ghcr.io', '6c946f9d-e780-4e81-918d-da3fa2f70934') {
+                  def backendImage = docker.build('ghcr.io/anothersimplecoder/2do_backend:latest')
+                  backendImage.push()
+                }
+              }
+            }
+        }
+    }
+    
+    stage('Set GitHub success status') {
+        agent any
+
+        steps {
+            setBuildStatus("Test complete", "SUCCESS");
+        }
+    }
+}
