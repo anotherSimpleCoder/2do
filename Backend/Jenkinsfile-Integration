@@ -9,53 +9,36 @@ void setBuildStatus(String message, String state) {
 }
 
 pipeline {
-    agent {
-        docker {
-            image 'mcr.microsoft.com/dotnet/sdk:9.0'
-            args '-u root' 
-        }
-    }
+
 
     stages {
-        stage('Setup .NET Core for backend') {
-            steps {
-                script {
-                    sh 'export PATH=$PATH:$HOME/.dotnet'
+        parallel {
+            stage('Run backend') {
+                agent {
+                    docker {
+                        image 'mcr.microsoft.com/dotnet/sdk:9.0'
+                        args '-u root -p 5130:5130' 
+                    }
                 }
-            }
-        }
-        stage('Install backend dependencies') {
-            steps {
-                sh 'dotnet restore'
-            }
-        }
-        stage('Build backend') {
-            steps {
-                sh 'dotnet build --no-restore'
-            }
-        }
-        stage('Set up dotnet-ef CLI') {
-            steps {
-                sh 'dotnet tool install dotnet-ef'
-            }
-        }
-        stage('Set up database') {
-            steps {
-                dir('Backend') {
+
+                steps {
+                    sh 'dotnet restore'
+                    sh 'dotnet build --no-restore'
+                    sh 'dotnet tool install dotnet-ef'
                     sh 'dotnet tool run dotnet-ef database update' 
+                    sh 'nohup dotnet run'
                 }
             }
-        }
-        stage('Start backend') {
-            steps {
-                dir('Backend') {
-                    sh 'nohup dotnet run &'
+
+            stage('Run flutter tests') {
+                agent {
+                    docker {
+                        image 'instrumentisto/flutter:latest'
+                        args '-u root' 
+                    }
                 }
-            }
-        }
-        stage('Waiting for backend to be ready') {
-            steps {
-                script {
+
+                steps {
                     sh '''
                     echo "Waiting for backend to start..."
                     while ! curl -sSf http://localhost:5130/api/health; do
@@ -63,28 +46,11 @@ pipeline {
                         sleep 5
                     done
                     '''
-                }
-            }
-        }
-        stage('Install dependencies for frontend') {
-            environment {
-                PATH = "${env.PATH}:$PWD/flutter/bin"
-            }
 
-            steps {
-                dir('frontend') {
-                    sh 'flutter pub get'
-                }
-            }
-        }
-        stage('Run tests') {
-            environment {
-                PATH = "${env.PATH}:$PWD/flutter/bin"
-            }
-
-            steps {
-                dir('frontend') {
-                    sh 'flutter test'
+                    dir('frontend') {
+                        sh 'flutter pub get'
+                        sh 'flutter test'
+                    }
                 }
             }
         }
