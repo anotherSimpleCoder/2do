@@ -16,7 +16,7 @@ pipeline {
             agent  {
                 docker {
                     image 'mcr.microsoft.com/dotnet/sdk:9.0'
-                    args '-u root' 
+                    args '-u root -p 5130:5130' 
                 }
             }
 
@@ -34,16 +34,28 @@ pipeline {
                     sh 'dotnet run &'
                 }
 
-                sh '''
-                    echo "Waiting for backend to start..."
+                waitUntil {
+                    script {
+                        def result = sh(script: 'curl -sSf http://localhost:5130/api/health', returnStatus: true)
+                        return result == 0
+                    }
+                }
+            }
+        }
 
-                    while ! curl -sSf http://localhost:5130/api/health; do
+        stage('Run integration tests on Flutter') {
+            agent {
+                docker {
+                    image 'instrumentisto/flutter:latest'
+                    args '-u root' 
+                }
+            }
 
-                        echo "Waiting for backend to start"
-                    
-                        sleep 5
-                    done
-                '''
+            steps {
+                setBuildStatus("${STAGE_NAME}", "PENDING")
+
+                sh 'flutter pub get'
+                sh 'flutter test'
             }
         }
 
