@@ -9,48 +9,87 @@ void setBuildStatus(String message, String state) {
 }
 
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'mcr.microsoft.com/dotnet/sdk:9.0'
+            label 'docker'
+        }
+    }
+
+    environment {
+        FLUTTER_VERSION = '3.29.2'
+    }
 
     stages {
-        stage('Build and Start Backend') {
+        stage('Setup .NET Core for backend') {
             steps {
                 script {
-                    setBuildStatus("${STAGE_NAME}", "PENDING")
-
-                    docker.image('mcr.microsoft.com/dotnet/sdk:9.0').withRun('-u root -p 5130:5130' ) {c -> 
-                        sh 'dotnet restore'
-                        sh 'dotnet build --no-restore'
-
-                        sh 'dotnet tool install dotnet-ef'
-
-                        dir('Backend') { 
-                            sh 'dotnet tool run dotnet-ef database update' 
-                            sh 'dotnet run &'
-                        }
-
-                        waitUntil {
-                            script {
-                                def result = sh(script: 'curl -sSf http://localhost:5130/api/health', returnStatus: true)
-                                return result == 0
-                            }
-                        }
-                    }
-
-                    docker.image('instrumentisto/flutter:latest').withRun('-u root --network host') {c ->
-                        setBuildStatus("${STAGE_NAME}", "PENDING")
-
-                        dir('frontend') {
-                            sh 'flutter pub get'
-                            sh 'flutter test'
-                        }
-                    }
+                    sh 'export PATH=$PATH:$HOME/.dotnet'
                 }
             }
         }
-
-        stage('Set GitHub status') {
+        stage('Install backend dependencies') {
             steps {
-                setBuildStatus("Test complete", "SUCCESS");
+                sh 'dotnet restore'
+            }
+        }
+        stage('Build backend') {
+            steps {
+                sh 'dotnet build --no-restore'
+            }
+        }
+        stage('Set up dotnet-ef CLI') {
+            steps {
+                sh 'dotnet tool install --global dotnet-ef'
+            }
+        }
+        stage('Set up database') {
+            steps {
+                dir('Backend') {
+                    sh 'dotnet ef database update'
+                }
+            }
+        }
+        stage('Start backend') {
+            steps {
+                dir('Backend') {
+                    sh 'nohup dotnet run &'
+                }
+            }
+        }
+        stage('Waiting for backend to be ready') {
+            steps {
+                script {
+                    sh '''
+                    echo "Waiting for backend to start..."
+                    while ! curl -sSf http://localhost:5130/api/health; do
+                        echo "Waiting for backend to start"
+                        sleep 5
+                    done
+                    '''
+                }
+            }
+        }
+        stage('Set up Flutter') {
+            steps {
+                script {
+                    sh 'git clone https://github.com/flutter/flutter.git -b ${FLUTTER_VERSION} --depth 1'
+                    sh 'export PATH=$PATH:$PWD/flutter/bin'
+                }
+            }
+        }
+        stage('Install dependencies for frontend') {
+            steps {
+                dir('frontend') {
+                    sh 'flutter pub get'
+                }
+            }
+        }
+        stage('Run tests') {
+            steps {
+                dir('frontend') {
+                    sh 'flutter test'
+                }
             }
         }
     }
