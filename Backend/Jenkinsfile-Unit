@@ -16,7 +16,7 @@ pipeline {
             agent any
 
             steps {
-                setBuildStatus("Starting Integration tests", "PENDING");
+                setBuildStatus("Starting Backend unit tests", "PENDING");
             }
         }
 
