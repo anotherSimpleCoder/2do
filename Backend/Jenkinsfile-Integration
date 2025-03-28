@@ -65,6 +65,7 @@ pipeline {
                         sh 'git clone https://github.com/flutter/flutter.git'
                     } 
 
+                    sh 'apt-get update && apt-get upgrade'
                     sh 'apt-get install unzip'
                 }
             }
