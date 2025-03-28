@@ -12,7 +12,7 @@ pipeline {
     agent none
 
     stages {
-        stage('Test') {
+        stage('Build and Start Backend') {
             agent  {
                 docker {
                     image 'mcr.microsoft.com/dotnet/sdk:9.0'
@@ -21,7 +21,7 @@ pipeline {
             }
 
             steps {
-                setBuildStatus("Testing", "PENDING")
+                setBuildStatus("${STAGE_NAME}", "PENDING")
 
                 sh 'dotnet restore'
                 sh 'dotnet build --no-restore'
@@ -29,9 +29,21 @@ pipeline {
                 sh 'dotnet new tool-manifest'
                 sh 'dotnet tool install dotnet-ef'
 
-                dir('Backend') { sh 'dotnet tool run dotnet-ef database update' }
+                dir('Backend') { 
+                    sh 'dotnet tool run dotnet-ef database update' 
+                    sh 'dotnet run &'
+                }
 
-                sh 'dotnet test --no-build --verbosity normal'
+                sh '''
+                    echo "Waiting for backend to start..."
+
+                    while ! curl -sSf http://localhost:5130/api/health; do
+
+                        echo "Waiting for backend to start"
+                    
+                        sleep 5
+                    done
+                '''
             }
         }
 
