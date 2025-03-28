@@ -59,7 +59,12 @@ pipeline {
         stage('Set up Flutter') {
             steps {
                 script {
-                    sh 'git clone https://github.com/flutter/flutter.git'
+                    def folderExists = sh(script: "if [ -d flutter ]; then echo 'true'; else echo 'false'; fi", returnStdout: true).trim()
+
+                    if (folderExists == 'false') {
+                        sh 'git clone https://github.com/flutter/flutter.git'
+                    } 
+
                     sh 'export PATH=$PATH:$PWD/flutter/bin'
                 }
             }
