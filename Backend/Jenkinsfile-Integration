@@ -16,10 +16,6 @@ pipeline {
         }
     }
 
-    environment {
-        FLUTTER_VERSION = '3.29.2'
-    }
-
     stages {
         stage('Setup .NET Core for backend') {
             steps {
@@ -73,7 +69,7 @@ pipeline {
         stage('Set up Flutter') {
             steps {
                 script {
-                    sh 'git clone https://github.com/flutter/flutter.git -b ${FLUTTER_VERSION} --depth 1'
+                    sh 'git clone https://github.com/flutter/flutter.git'
                     sh 'export PATH=$PATH:$PWD/flutter/bin'
                 }
             }
