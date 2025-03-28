@@ -9,36 +9,36 @@ void setBuildStatus(String message, String state) {
 }
 
 pipeline {
-    stage('Set GitHub pending status') {
-        agent any
+    agent any
 
-        steps {
-            setBuildStatus("Starting building backend", "PENDING");
-        }
-    }
+    stages {
+        stage('Set GitHub pending status') {
+            agent any
     
-    stage('Build docker backend image') {
-        agent any
-    
-        steps {
-            setBuildStatus("Building", "PENDING");
-                
-            dir('Backend') {
-              script {
-                docker.withRegistry('https://ghcr.io', '6c946f9d-e780-4e81-918d-da3fa2f70934') {
-                  def backendImage = docker.build('ghcr.io/anothersimplecoder/2do_backend:latest')
-                  backendImage.push()
-                }
-              }
+            steps {
+                setBuildStatus("Starting building backend", "PENDING");
             }
         }
-    }
-    
-    stage('Set GitHub success status') {
-        agent any
-
-        steps {
-            setBuildStatus("Test complete", "SUCCESS");
+        
+        stage('Build docker backend image') {
+            steps {
+                setBuildStatus("Building", "PENDING");
+                    
+                dir('Backend') {
+                  script {
+                    docker.withRegistry('https://ghcr.io', '6c946f9d-e780-4e81-918d-da3fa2f70934') {
+                      def backendImage = docker.build('ghcr.io/anothersimplecoder/2do_backend:latest')
+                      backendImage.push()
+                    }
+                  }
+                }
+            }
+        }
+        
+        stage('Set GitHub success status') {
+            steps {
+                setBuildStatus("Test complete", "SUCCESS");
+            }
         }
     }
 }
