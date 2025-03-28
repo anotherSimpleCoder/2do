@@ -1,0 +1,16 @@
+services:
+  2do_backend:
+    image: ghcr.io/anothersimplecoder/2do_backend:latest
+    container: 2do_backend
+    ports:
+      - "5130:5130"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  2do_frontend:
+    image: ghcr.io/anothersimplecoder/2do_frontend:latest
+    container: 2do_frontend
+    ports:
+      - "80:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
