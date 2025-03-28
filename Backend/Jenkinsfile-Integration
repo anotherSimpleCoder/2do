@@ -43,7 +43,7 @@ pipeline {
         }
         stage('Set up dotnet-ef CLI') {
             steps {
-                sh 'dotnet tool install dotnet-ef'
+                sh 'dotnet tool install --create-manifest-if-needed dotnet-ef'
             }
         }
         stage('Set up database') {
