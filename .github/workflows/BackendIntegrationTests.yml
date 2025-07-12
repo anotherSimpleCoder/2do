@@ -38,6 +38,9 @@ jobs:
           
       - name: Set up Flutter
         uses: subsito/flutter-action@v2
-        run: |
-          flutter pub get
-          flutter test
+        
+      - name: Install dependencies
+        run: flutter pub get
+      
+      - name: Run tests
+        run: flutter test
