@@ -1,5 +1,5 @@
 name: Backend Unit Tests
-on: psh
+on: push
 
 jobs:
   test:
