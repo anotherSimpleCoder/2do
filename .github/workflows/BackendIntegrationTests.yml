@@ -37,7 +37,7 @@ jobs:
           done
           
       - name: Set up Flutter
-        uses: subsito/flutter-action@v2
+        uses: subsito/flutter-action@v3
         
       - name: Install dependencies
         run: flutter pub get
