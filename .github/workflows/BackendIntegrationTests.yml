@@ -41,7 +41,9 @@ jobs:
         uses: subosito/flutter-action@v2
         
       - name: Install dependencies
+        working-directory: Frontend
         run: flutter pub get
       
       - name: Run tests
+        working-directory: Frontend
         run: flutter test
