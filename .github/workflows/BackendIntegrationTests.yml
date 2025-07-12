@@ -26,6 +26,7 @@ jobs:
         run: dotnet-ef database update
         
       - name: Run backend
+        working-directory: Backend
         run: nohup dotnet run &
         
       - name: Waiting for backend to be ready
