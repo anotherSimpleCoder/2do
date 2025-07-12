@@ -1,0 +1,43 @@
+name: Backend Integration Tests
+on: push
+
+jobs:
+  test:
+    name: Run backend integration tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0
+          
+      - name: Set up project
+        run: |
+          dotnet restore
+          dotnet build --no-restore
+          dotnet tool install --global dotnet-ef
+
+      - name: Run database update
+        working-directory: Backend
+        run: dotnet-ef database update
+        
+      - name: Run backend
+        run: nohup dotnet run &
+        
+      - name: Waiting for backend to be ready
+        run: |
+          echo "Waiting for backend to start..."
+          while ! curl -sSf http://localhost:5130/api/health; do
+              echo "Waiting for backend to start"
+              sleep 5
+          done
+          
+      - name: Set up Flutter
+        uses: subsito/flutter-action@v2
+        run: |
+          flutter pub get
+          flutter test
