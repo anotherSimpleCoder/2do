@@ -23,6 +23,7 @@ jobs:
         
       - name: Run database update
         working-directory: Backend
-        run: |
-          dotnet tool run dotnet-ef database update
-          dotnet test --no-build --verbosity normal
+        run: dotnet tool run dotnet-ef database update
+      
+      - name: Run tests
+        run: dotnet test --no-build --verbosity normal
