@@ -19,7 +19,7 @@ jobs:
         run: |
           dotnet restore
           dotnet build --no-restore
-          dotnet tool install dotnet-ef
+          dotnet tool install --global dotnet-ef
         
       - name: Run database update
         working-directory: Backend
