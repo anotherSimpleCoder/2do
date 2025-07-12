@@ -6,23 +6,23 @@ jobs:
     name: Run backend unit tests
     runs-on: ubuntu-latest
 
-  steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Setup dotnet
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 9.0
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0
 
-    - name: Set up project
-      run: |
-        dotnet restore
-        dotnet build --no-restore
-        dotnet tool install dotnet-ef
-      
-    - name: Run database update
-      working-directory: Backend
-      run: |
-        dotnet tool run dotnet-ef database update
-        dotnet test --no-build --verbosity normal
+      - name: Set up project
+        run: |
+          dotnet restore
+          dotnet build --no-restore
+          dotnet tool install dotnet-ef
+        
+      - name: Run database update
+        working-directory: Backend
+        run: |
+          dotnet tool run dotnet-ef database update
+          dotnet test --no-build --verbosity normal
