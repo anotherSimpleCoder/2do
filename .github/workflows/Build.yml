@@ -15,7 +15,7 @@ jobs:
       - name: Build Docker image
         uses: docker/build-push-action@v3
         with:
-          context: Backend
-          file: ./Dockerfile
+          context: .
+          file: ./Backend/Dockerfile
           push: false
           tags: ghcr.io/anothersimplecoder/2do_backend:latest
